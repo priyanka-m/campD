@@ -36,8 +36,8 @@
 					<div class="big justified optionBoxes">
 						<div class="box box_hover justified alpha">
 							<div class="centralized" style="margin-top:75px;">
-								<?php if ($user->fb_login) { ?>
-									<img src="//graph.facebook.com/<?php echo $username;?>/picture?type=large"/>
+								<?php if ($user->fbid) { ?>
+									<img src="images/<?php echo $user->fbid; ?>.jpg"/>
 								<?php } else {?>
 									<div style="font-size:40px;">sign up with facebook to fetch your picture</div>
 								<?php }?>

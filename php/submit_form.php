@@ -74,11 +74,13 @@
 			respondJSON($output);
 		}
 	} elseif ($type == 'fb_login') {
-		$username = $_POST['username'];
-		$password = $_POST['password'];
-		$gender = $_POST['gender'];
+		$username = isset($_POST['username']) ? $_POST['username'] : '';
+		$password = isset($_POST['password']) ? $_POST['password'] : 0;
+		$gender = isset($_POST['gender']) ? $_POST['gender'] : 0;
+		$fbid = isset($_POST['fbid']) ? $_POST['fbid'] : 0;
+		$email = isset($_POST['email']) ? $_POST['email'] : '';
 
-		$query = 'SELECT * FROM users WHERE username = "'.$username.'"';
+		$query = 'SELECT * FROM users WHERE email = "'.$email.'"';
 		$result = DB::query($LINK, $query);
 		$count = mysqli_num_rows($result);
 		if ($count) {
@@ -91,7 +93,7 @@
 			respondJSON($output);
 		} else {
 			$hash_of_pwd = md5($password);
-			$query = 'INSERT INTO users(username, password, age, gender, fb_login) VALUES("'.$username.'","'.$hash_of_pwd.'",0,"'.$gender.'", 1)';
+			$query = 'INSERT INTO users(username, password, age, gender, fb_login, email, fbid) VALUES("'.$username.'","'.$hash_of_pwd.'",0,"'.$gender.'", 1, "'.$email.'","'.$fbid.'")';
 			$result = DB::query($LINK, $query);
 
 			if(!$result) {
@@ -102,6 +104,9 @@
 				$output['message'] = 'new user registered';
 				$output['userid'] = mysqli_insert_id($LINK);
 				$_SESSION['userid'] = $output['userid'];
+
+				$user = new User($output['userid'], $LINK);
+				$user->saveFBpicture($fbid);
 			}
 			respondJSON($output);
 		}

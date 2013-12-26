@@ -229,11 +229,13 @@ function checkLoginStatus(response) {
 campDiaries.loadFacebookCredentials = function() {
 	FB.api('/me', function(response) {
 		var username = response.username;
+		var email = response.email;
+		var fbid = response['id'];
 		var gender = response.gender;
 		var password = 'facebookLogin';
 		$.ajax ({
 			type:'POST',
-			data:{username:username, password:password, gender:gender},
+			data:{username:username, password:password, gender:gender, fbid:fbid, email:email},
 			dataType:'JSON',
 			url: 'php/submit_form.php?type=fb_login',
 			success: function(response) {
