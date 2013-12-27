@@ -59,6 +59,35 @@
 			$img = file_get_contents('https://graph.facebook.com/'.$fbid.'/picture?type=large');
 			$file = dirname(__file__).'/../images/'.$fbid.'.jpg';
 			file_put_contents($file, $img);
+			$img = new Imagick($file); 
+		    $img->setImageResolution(72,72);
+		    $img->resampleImage(72,72,imagick::FILTER_UNDEFINED,1);
+		    $img->scaleImage(250,0);
+		    $d = $img->getImageGeometry();
+		    $h = $d['height'];
+		    if($h > 250) {
+			    $img->scaleImage(0,250);
+			    $img->writeImage($file);
+		    } else {
+		    	$img->writeImage($file);
+		    }
+		    $img->destroy(); 
+			
+		}
+		public function passwordNotSet($LINK) {
+			$userid = $this->userid;
+			$query = 'SELECT password from users WHERE userid = '.$userid;
+			$res = DB::query($LINK, $query);
+
+			if ($res) {
+				$row = DB::fetchResult($res);
+				$pass = $row['password'];
+				if ($pass == '')
+					return true;
+				else
+					return false;
+			}
+
 		}
 	}
 ?>

@@ -70,6 +70,7 @@ campDiaries.bindEvents = function() {
 		$('#male').removeAttr('checked');
 		$('#female').removeAttr('checked');
 		$('.errmsg').empty();
+		$('#emailid').val('');
 		$(this).parents('#sign_up_form').hide();
 		$('.box').each(function(){
 			$(this).addClass('box_hover');
@@ -95,13 +96,15 @@ campDiaries.bindFormHandlers = function() {
 	campDiaries.bindSignUpForm();
 	campDiaries.bindLoginForm();
 	campDiaries.FacebookLogin();
+	campDiaries.FBLoginPasswordSet();
 }
 campDiaries.bindSignUpForm = function() {
 	$('#sign_up_form').on('click', '#sign_up_submit', function(event){
 		event.preventDefault();
-		$('.errmsg').empty();
+		$('.errmsg').empty().show();
 		var username = $('#uname').val();
 		var password = $('#pwd').val();
+		var emailid = $('#emailid').val();
 		var age = $('#age').val();
 		var male = $('#male:checked').length;
 		var female = $( "#female:checked" ).length;
@@ -111,11 +114,12 @@ campDiaries.bindSignUpForm = function() {
 		validate['password'] = password;
 		validate['age'] = age;
 		validate['gender'] = gender;
+		validate['emailid'] = emailid;
 		var errmsg = campDiaries.formValidation(validate);
-		if (!errmsg) {
+		if (errmsg == 0) {
 			$.ajax ({
 				type:'POST',
-				data:{username:username, password:password, age:age, gender:gender},
+				data:{username:username, password:password, age:age, gender:gender, emailid:emailid},
 				dataType:'JSON',
 				url: 'php/submit_form.php?type=sign_up_form',
 				success: function(response) {
@@ -127,28 +131,28 @@ campDiaries.bindSignUpForm = function() {
 				}
 			});
 		} else {
-			$('.errmsg').text(errmsg);
+			$('.errmsg').append(errmsg).fadeOut(3000);
 		}
-	})
+	});
 }
+
 campDiaries.bindLoginForm = function() {
 	$('#login_form').on('click', '#submit_login_form', function(event){
 		event.preventDefault();
+		$('.errmsg').empty().show();
 		var username = $('#username').val();
 		var password = $('#password').val();
 		var remMe = $('#remMe:checked').length;
-		var validate = new Array();
-		validate['username'] = username
-		validate['password'] = password;
+
 		$.ajax ({
 			type:'POST',
-			data:{username:username, password:password, remMe:remMe},
+			data:{email:username, password:password, remMe:remMe},
 			dataType:'JSON',
 			url: 'php/submit_form.php?type=login',
 			success:function(response) {
 				if(response.status == 'failed') {
 					var message = response.message;
-					$('.errmsg').text(message);
+					$('.errmsg').append(message).fadeOut(3000);
 				} else if (response.status == 'success'){
 					window.location.replace(campDiaries.HOST+'display_user.php?user_id='+response.userid);
 				}
@@ -156,12 +160,14 @@ campDiaries.bindLoginForm = function() {
 		});
 	});
 }
+
 campDiaries.formValidation = function(validate) {
 	var errmsg = 0;
 	for (var parameter in validate) {
 		if (parameter == 'username' ) {
-			if(validate['username'].length < 8 || validate['username'].length > 50) {
-				errmsg = 'Username length Insufficeint';
+			var regex = /^[a-zA-Z0-9]+$/;
+			if(validate['username'].length < 8 || validate['username'].length > 50 || !regex.test(validate['username'])) {
+				errmsg = 'Username Incorrect. Alphabest/Characters(Min:8, Max:12)';
 				return errmsg;
 			} 
 		} else if (parameter == 'password') {
@@ -170,18 +176,55 @@ campDiaries.formValidation = function(validate) {
 				return errmsg;
 			}	
 		} else if (parameter == 'age') {
-			if (isNaN(parseInt(validate['age'])) && !isFinite(validate['age'])) {
+			if (isNaN(parseInt(validate['age'])) && !isFinite(validate['age']) || validate['age'] == '') {
 				errmsg = 'Incorrect Age';
 				return errmsg;
 			} 
 		} else if (parameter == 'gender') {
-				if(validate['gender'] == 0)
-					errmsg = 'Gender not specified';
-			return errmsg;
+			if(validate['gender'] == 0) {
+				errmsg = 'Gender not specified';
+				return errmsg;
+			}
+		} else if (parameter == 'emailid') {
+			var regex = /^[a-z0-9]+([-._][a-z0-9]+)*@([a-z0-9]+([a-z0-9]+)*[.])+[a-z]{2,4}$/;
+			if (validate['emailid'].length == 0 || !regex.test(validate['emailid'])) {
+				errmsg = 'Incorrect Email id';
+				return errmsg;
+			}
 		}
 	}
 	return errmsg;
 }
+campDiaries.FBLoginPasswordSet = function() {
+	$('.passInfo').on('click', '#fbPass', function(event){
+		event.preventDefault();
+		$('#pswrd').show();
+	});
+
+	$('#fbPass_form').submit(function(event){
+		event.preventDefault();
+		var userid = $(this).parents('.passInfo').data('user-id');
+		var password = $('#pswrd').val();
+		var length = $('input#pswrd').length;
+		if (length > 12) {
+			alert("Password length should be maximum 12 characters");
+			return;
+		}
+		$.ajax ({
+			type:'POST',
+			data:{password:password, userid:userid},
+			dataType:'JSON',
+			url: 'php/submit_form.php?type=setFBPass',
+			success: function(response) {
+				if (response.status == 'success'){
+				 	$('.passInfo').empty().show();
+				 	$('.passInfo').append(response.message).fadeOut(3000);
+				}
+			}
+		});
+	})
+}
+
 campDiaries.logOut = function() {
 	$('#logout').click(function(event){
 		event.preventDefault();
@@ -241,7 +284,7 @@ campDiaries.loadFacebookCredentials = function() {
 			success: function(response) {
 				if(response.status == 'failed') {
 					var message = response.message;
-					$('.errmsg').text(message);
+					$('.errmsg').append(message).fadeOut(3000);
 				} else if (response.status == 'success'){
 					window.location.replace(campDiaries.HOST+'display_user.php?user_id='+response.userid);
 				}

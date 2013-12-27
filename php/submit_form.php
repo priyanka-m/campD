@@ -13,6 +13,7 @@
 		$password = $_POST['password'];
 		$age = $_POST['age'];
 		$gender = $_POST['gender'];
+		$email = $_POST['emailid'];
 
 		$hash_of_pwd = md5($password);
 		$query = 'SELECT * FROM users WHERE username = "'.$username.'"';
@@ -23,9 +24,13 @@
 			$output['message'] = 'Username already exists';
 			respondJSON($output);
 		} 
-		elseif (!preg_match('/^[a-zA-Z0-9]+$/', $username)) {
+
+		$query = 'SELECT * FROM users WHERE email = "'.$email.'"';
+		$result = DB::query($LINK, $query);
+		$count = mysqli_num_rows($result);
+		if ($count) {
 			$output['status'] = 'failed';
-			$output['message'] = 'Only alphabets and numbers allowed for username';
+			$output['message'] = 'Email Id already registered';
 			respondJSON($output);
 		}
 		else {
@@ -44,12 +49,12 @@
 			respondJSON($output);
 		}
 	} elseif ($type == 'login') {
-		$username = $_POST['username'];
+		$email = $_POST['email'];
 		$password = $_POST['password'];
 		$remMe = $_POST['remMe'];
 
 		$hash_of_pwd = md5($password);
-		$query = 'SELECT userid FROM users WHERE password = "'.$hash_of_pwd.'" AND username = "'.$username.'"';
+		$query = 'SELECT userid FROM users WHERE password = "'.$hash_of_pwd.'" AND email = "'.$email.'"';
 		
 		$result = DB::query($LINK, $query);
 		$count = mysqli_num_rows($result);
@@ -70,7 +75,7 @@
 			respondJSON($output);
 		} else {
 			$output['status'] = 'failed';
-			$output['message'] = 'No such user exists. Hit Back to Sign Up';
+			$output['message'] = 'Incorrect username/password combination';
 			respondJSON($output);
 		}
 	} elseif ($type == 'fb_login') {
@@ -92,7 +97,7 @@
 			$_SESSION['userid'] = $output['userid'];
 			respondJSON($output);
 		} else {
-			$hash_of_pwd = md5($password);
+			$hash_of_pwd = '';
 			$query = 'INSERT INTO users(username, password, age, gender, fb_login, email, fbid) VALUES("'.$username.'","'.$hash_of_pwd.'",0,"'.$gender.'", 1, "'.$email.'","'.$fbid.'")';
 			$result = DB::query($LINK, $query);
 
@@ -121,6 +126,22 @@
 
 		session_unset();
 		
+		respondJSON($output);
+	} else if ($type == 'setFBPass') {
+		$password = $_POST['password'];
+		$userid = $_POST['userid'];
+
+		$hash_of_pwd = md5($password);
+		$query = 'UPDATE users SET password = "'.$hash_of_pwd.'" WHERE userid = '.$userid;
+		$result = DB::query($LINK, $query);
+
+		if(!$result) {
+			$output['status'] = 'failed';
+			$output['message'] = 'Failed to set Password';
+		} else {
+			$output['status'] = 'success';
+			$output['message'] = 'Password Set';
+		}
 		respondJSON($output);
 	}
 ?>

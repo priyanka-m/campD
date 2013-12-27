@@ -24,8 +24,10 @@
 		
 		$userid = $_GET['user_id'];
 		$loggedin_user_id = $_SESSION['userid'];
-
-		if ($loggedin_user_id == $userid) {
+		
+		if ($loggedin_user_id == NULL) 
+			header('Location:'.HOST.'index.php');
+		else if ($loggedin_user_id == $userid) {
 			
 			$query = 'SELECT * FROM users WHERE userid = '.$userid;
 			$user = new User($loggedin_user_id, $LINK);
@@ -35,7 +37,7 @@
 				<div class="container">
 					<div class="big justified optionBoxes">
 						<div class="box box_hover justified alpha">
-							<div class="centralized" style="margin-top:75px;">
+							<div class="centralized" style="margin-top:30px;">
 								<?php if ($user->fbid) { ?>
 									<img src="images/<?php echo $user->fbid; ?>.jpg"/>
 								<?php } else {?>
@@ -58,6 +60,12 @@
 						<div class="box box_hover justified omega">
 							<div class="centralized">
 								<a href="#" id="logout" data-userid="<?php echo $userid;?>" style="text-decoration:none;color:#ffffff;">Logout</a>
+								<?php if($user->passwordNotSet($LINK)): ?>
+									<div class="passInfo mtop20" style="font-size:20px;" data-user-id="<?php echo $userid; ?>">
+										To be able to use normal login, <span style="cursor:pointer" id="fbPass"><u>Set Password</u></span> 
+										<form id="fbPass_form" style="margin-top:10px;"><input type="password" id="pswrd" value="" autocomplete="off" placeholder="password" style="display:none"></form>
+									</div>
+								<?php endif; ?>
 							</div>
 						</div>
 					</div>

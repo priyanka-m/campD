@@ -44,16 +44,16 @@
 			</div>
 			<div class="big justified hidden" id="login_form">
 				<div class="form_box justified">
-					<div class="centralized form_text" style="margin-top:50px;">
+					<div class="centralized form_text" style="margin-top:60px;">
 						<form action="#">
-							username: <input type="text" id="username" value=""><br>
-							password: <input type="password" id="password" value="" autocomplete="off" maxlength="12">
-							remember me <input type="checkbox" id="remMe"><br>
-							<input type="submit" value="Submit" class="buttons" id="submit_login_form">
-							|
-							<input type="button" value="Back" class="buttons" id="back_button">
+							<input type="text" id="username" value="" placeholder="email id"><br>
+							<input type="password" id="password" value="" autocomplete="off" maxlength="12" placeholder="password">
+							remember me <input type="checkbox" id="remMe"><br/>
 						</form>
 						<div class="errmsg mtop10"></div>
+						<input type="submit" value="Submit" class="buttons" id="submit_login_form" style="margin-top:40px;">
+							|
+						<input type="button" value="Back" class="buttons" id="back_button">
 					</div>
 				</div>
 			</div>
@@ -61,18 +61,19 @@
 				<div class="form_box justified">
 					<div class="centralized form_text" style="margin-top:20px;font-size:20px;">
 						<form action="#">
-							username: <br/><input type="text" id="uname"><br>
-							password: <br/><input type="password" id="pwd" autocomplete="off" maxlength="12"><br/>
-							Age: <br/><input type="text" id="age"><br/>
+							<input type="text" id="uname" placeholder="Username"><br/>
+							<input type="password" id="pwd" autocomplete="off" maxlength="12" placeholder="Password"><br/>
+							<input type="text" id="emailid" placeholder="email"><br/>
+							<input type="text" id="age" placeholder="Age"><br/>
 							<label for="male">Male</label>
 							<input type="radio" name="sex" id="male" value="male">
 							<label for="female">Female</label>
-							<input type="radio" name="sex" id="female" value="female"><br/>
-							<input type="submit" value="Submit" class="buttons mtop20" id="sign_up_submit">
-							|
-							<input type="button" value="Back" class="buttons" id="back_button">
+							<input type="radio" name="sex" id="female" value="female">
 						</form>
-						<div class="errmsg mtop10"></div>
+						<div class="errmsg"></div>
+						<input type="submit" value="Submit" class="buttons mtop10" id="sign_up_submit">
+							|
+						<input type="button" value="Back" class="buttons" id="back_button">
 					</div>
 				</div>
 			</div>
@@ -81,7 +82,6 @@
 					<div class="centralized">Facebook</div>
 					<div class="centralized form_text" style="margin-top:60px;">
 						<div id="fb-root"></div>
-						<!-- <fb:login-button show-faces="true" width="200" max-rows="1"></fb:login-button>	<br/> -->
 						<input id="loginButton" type="button" value="Login" class="buttons">
 						|
 						<input type="button" value="Back" class="buttons" id="back_button">
