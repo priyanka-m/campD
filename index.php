@@ -44,14 +44,14 @@
 			</div>
 			<div class="big justified hidden" id="login_form">
 				<div class="form_box justified">
-					<div class="centralized form_text" style="margin-top:60px;">
+					<div class="centralized form_text" style="margin-top:50px;">
 						<form action="#">
-							<input type="text" id="username" value="" placeholder="email id"><br>
-							<input type="password" id="password" value="" autocomplete="off" maxlength="12" placeholder="password">
-							remember me <input type="checkbox" id="remMe"><br/>
+							<input type="text" id="username" value="" placeholder="email id" class="mtop10"><br/>
+							<input type="password" id="password" value="" autocomplete="off" maxlength="12" placeholder="password" class="mtop10"><br/>
+							remember me <input type="checkbox" id="remMe" style="margin-top:0px;width:25px;"><br/>
 						</form>
 						<div class="errmsg mtop10"></div>
-						<input type="submit" value="Submit" class="buttons" id="submit_login_form" style="margin-top:40px;">
+						<input type="submit" value="Submit" class="buttons" id="submit_login_form" style="margin-top:30px;">
 							|
 						<input type="button" value="Back" class="buttons" id="back_button">
 					</div>
@@ -59,12 +59,12 @@
 			</div>
 			<div id="sign_up_form" class="big justified hidden">
 				<div class="form_box justified">
-					<div class="centralized form_text" style="margin-top:20px;font-size:20px;">
+					<div class="centralized form_text" style="margin-top:10px;font-size:20px;">
 						<form action="#">
-							<input type="text" id="uname" placeholder="Username"><br/>
-							<input type="password" id="pwd" autocomplete="off" maxlength="12" placeholder="Password"><br/>
-							<input type="text" id="emailid" placeholder="email"><br/>
-							<input type="text" id="age" placeholder="Age"><br/>
+							<input type="text" id="uname" placeholder="Username" class="mtop10"><br/>
+							<input type="password" id="pwd" autocomplete="off" maxlength="12" placeholder="Password" class="mtop10"><br/>
+							<input type="text" id="emailid" placeholder="email" class="mtop10"><br/>
+							<input type="text" id="age" placeholder="Age" class="mtop10"><br/>
 							<label for="male">Male</label>
 							<input type="radio" name="sex" id="male" value="male">
 							<label for="female">Female</label>
